@@ -11,10 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
-using MetricsManager.Models;
 
-namespace MetricsManager
+namespace MetricsAgent
 {
     public class Startup
     {
@@ -22,19 +20,13 @@ namespace MetricsManager
         {
             Configuration = configuration;
         }
-        public IConfiguration Configuration { get; } 
+        public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<AgentPool>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsManager", Version = "v1" });
-                c.MapType<TimeSpan>(() => new OpenApiSchema
-                {
-                    Type = "string",
-                    Example = new OpenApiString("00:00:00")
-                });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
             });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,15 +35,11 @@ namespace MetricsManager
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MetricsManager v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MetricsAgent v1"));
             }
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
