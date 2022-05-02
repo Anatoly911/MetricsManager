@@ -1,5 +1,6 @@
 using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using Xunit;
 
@@ -7,6 +8,7 @@ namespace MetricsManagerTests
 {
     public class CpuMetricsManagerTests
     {
+        private readonly ILogger<CpuMetricsController> _logger;
         private CpuMetricsController _cpuMetricsController;
         public CpuMetricsManagerTests()
         {

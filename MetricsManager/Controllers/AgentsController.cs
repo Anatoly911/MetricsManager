@@ -7,8 +7,8 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class AgentsController : ControllerBase
     {
-        private AgentPool _agentPool;
-        public AgentsController(AgentPool agentPool)
+        private IAgentPool<AgentInfo> _agentPool;
+        public AgentsController(IAgentPool<AgentInfo> agentPool)
         {
             _agentPool = agentPool;
         }

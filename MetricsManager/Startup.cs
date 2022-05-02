@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using MetricsManager.Models;
+using MetricsManager.Controllers;
+using System.Data.SQLite;
 
 namespace MetricsManager
 {
@@ -22,10 +24,10 @@ namespace MetricsManager
         {
             Configuration = configuration;
         }
-        public IConfiguration Configuration { get; } 
+        public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<AgentPool>();
+            services.AddSingleton<IAgentPool<AgentInfo>, AgentPool>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
