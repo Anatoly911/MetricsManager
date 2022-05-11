@@ -11,6 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Any;
+using MetricsManager.Models;
+using MetricsManager.Controllers;
+using System.Data.SQLite;
 
 namespace MetricsManager
 {
@@ -23,11 +27,16 @@ namespace MetricsManager
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSingleton<IAgentPool<AgentInfo>, AgentPool>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsManager", Version = "v1" });
+                c.MapType<TimeSpan>(() => new OpenApiSchema
+                {
+                    Type = "string",
+                    Example = new OpenApiString("00:00:00")
+                });
             });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
