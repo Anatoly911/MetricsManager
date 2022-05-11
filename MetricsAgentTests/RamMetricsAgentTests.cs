@@ -4,6 +4,7 @@ using MetricsAgent.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace MetricsAgentTests
@@ -31,11 +32,14 @@ namespace MetricsAgentTests
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()
         {
-            var agentId = 1;
-            TimeSpan fromTime = TimeSpan.FromSeconds(0);
-            TimeSpan toTime = TimeSpan.FromSeconds(100);
-            IActionResult result = _ramMetricsController.GetMetrics(agentId, fromTime, toTime);
-            Assert.IsAssignableFrom<IActionResult>(result);
+            mock.Setup(repository =>
+                        repository.GetByTimePeriod(It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+                        .Returns(new List<RamMetric>());
+
+            _ramMetricsController.GetMetrics(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(100));
+
+            mock.Verify(repository =>
+                    repository.GetByTimePeriod(It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()), Times.AtMostOnce());
         }
     }
 }

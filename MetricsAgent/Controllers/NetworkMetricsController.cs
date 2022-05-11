@@ -55,10 +55,10 @@ namespace MetricsAgent.Controllers
             return Ok(response);
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше четвёртое сообщение в лог");
-            return Ok();
+            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
+            return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime, toTime));
         }
     }
 }
