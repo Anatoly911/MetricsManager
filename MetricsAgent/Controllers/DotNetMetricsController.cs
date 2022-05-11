@@ -54,11 +54,11 @@ namespace MetricsAgent.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше второе сообщение в лог");
-            return Ok();
+            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
+            return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime));
         }
     }
 }

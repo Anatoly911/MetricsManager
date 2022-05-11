@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MetricsAgent
 {
     public interface IRepository<T> where T : class
     {
+        IList<T> GetByTimePeriod(TimeSpan timeFrom, TimeSpan timeTo);
         IList<T> GetAll();
         T GetById(int id);
         void Create(T item);

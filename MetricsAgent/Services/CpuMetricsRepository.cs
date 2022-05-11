@@ -84,5 +84,28 @@ namespace MetricsAgent.Services
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }
+        public IList<CpuMetric> GetByTimePeriod(TimeSpan timeFrom, TimeSpan timeTo)
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            connection.Open();
+            using var cmd = new SQLiteCommand(connection);
+            cmd.CommandText = "SELECT * FROM cpumetrics where time >= @timeFrom and time <= @timeTo";
+            cmd.Parameters.AddWithValue("@timeFrom", timeFrom.TotalSeconds);
+            cmd.Parameters.AddWithValue("@timeTo", timeTo.TotalSeconds);
+            var returnList = new List<CpuMetric>();
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new CpuMetric
+                    {
+                        Id = reader.GetInt32(0),
+                        Value = reader.GetInt32(1),
+                        Time = TimeSpan.FromSeconds(reader.GetInt32(2))
+                    });
+                }
+            }
+            return returnList;
+        }
     }
 }
