@@ -1,3 +1,4 @@
+using AutoMapper;
 using MetricsAgent.Converters;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Builder;
@@ -27,22 +28,45 @@ namespace MetricsAgent
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureSqlLiteConnection(services);
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
-            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
-            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
-            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
-            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
-            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
+            ConfigureSqlLiteConnection(services);
+            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>()
+                .Configure<DatabaseOptions>(options =>
+                {
+                    Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+                });
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>()
+                .Configure<DatabaseOptions>(options =>
+                {
+                    Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+                });
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>()
+                .Configure<DatabaseOptions>(options =>
+                {
+                    Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+                });
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>()
+                .Configure<DatabaseOptions>(options =>
+                {
+                    Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+                });
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>()
+                .Configure<DatabaseOptions>(options =>
+                {
+                    Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsAgent", Version = "v1" });
                 c.MapType<TimeSpan>(() => new OpenApiSchema
                 {
                     Type = "string",
-                    Example = new OpenApiString("00:00:00")
+                    Example = new OpenApiString("0:00:00:00")
                 });
             });
         }
@@ -59,7 +83,10 @@ namespace MetricsAgent
             {
                 command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
                 command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
+                command.CommandText =
+                    @"CREATE TABLE cpumetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
                 command.ExecuteNonQuery();
             }
         }

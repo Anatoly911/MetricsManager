@@ -1,4 +1,6 @@
-﻿using MetricsAgent.Models;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,26 +15,26 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        private IHddMetricsRepository _hddMetricsRepository;
+        private readonly IHddMetricsRepository _hddMetricsRepository;
         private readonly ILogger<HddMetricsController> _logger;
-        public HddMetricsController(IHddMetricsRepository _hddMetricsRepository)
+        private readonly IMapper _mapper;
+        public HddMetricsController(IMapper mapper, ILogger<HddMetricsController> logger, IHddMetricsRepository hddMetricsRepository)
         {
-            this._hddMetricsRepository = _hddMetricsRepository;
-        }
-        public HddMetricsController(ILogger<HddMetricsController> logger)
-        {
+            _mapper = mapper;
             _logger = logger;
+            _hddMetricsRepository = hddMetricsRepository;
         }
         [HttpPost("create")]
         public IActionResult Create([FromBody] HddMetricCreateRequest request)
         {
-            _hddMetricsRepository.Create(new HddMetric
+            HddMetric hddMetric = new HddMetric
             {
-                Time = request.Time,
+                Time = request.Time.TotalSeconds,
                 Value = request.Value
-            });
+            };
+            _hddMetricsRepository.Create(hddMetric);
             if (_logger != null)
-                _logger.LogDebug(1, "NLog встроен в HddMetricsController");
+                _logger.LogDebug("Успешно добавили новую hdd метрику: {0}", hddMetric);
             return Ok();
         }
         [HttpGet("all")]
@@ -44,21 +46,27 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<HddMetricDto>()
             };
             foreach (var metric in metrics)
-            {
-                response.Metrics.Add(new HddMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
-            }
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+
             return Ok(response);
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
-            return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime, toTime));
+            var metrics = _hddMetricsRepository.GetByTimePeriod(fromTime, toTime);
+            var response = new AllHddMetricsResponse()
+            {
+                Metrics = new List<HddMetricDto>()
+            };
+            foreach (var metric in metrics)
+                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
+            return Ok(response);
+            /*response.Metrics.Add(new HddMetricDto
+            {
+                Time = TimeSpan.FromSeconds(metric.Time),
+                Value = metric.Value,
+                Id = metric.Id
+            });*/
         }
     }
 }

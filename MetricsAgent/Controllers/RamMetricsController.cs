@@ -1,4 +1,6 @@
-﻿using MetricsAgent.Models;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,26 +13,26 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class RamMetricsController : ControllerBase
     {
-        private IRamMetricsRepository _ramMetricsRepository;
+        private readonly IRamMetricsRepository _ramMetricsRepository;
         private readonly ILogger<RamMetricsController> _logger;
-        public RamMetricsController(IRamMetricsRepository _ramMetricsRepository)
+        private readonly IMapper _mapper;
+        public RamMetricsController(IMapper mapper, ILogger<RamMetricsController> logger, IRamMetricsRepository ramMetricsRepository)
         {
-            this._ramMetricsRepository = _ramMetricsRepository;
-        }
-        public RamMetricsController(ILogger<RamMetricsController> logger)
-        {
+            _mapper = mapper;
             _logger = logger;
+            _ramMetricsRepository = ramMetricsRepository;
         }
         [HttpPost("create")]
         public IActionResult Create([FromBody] RamMetricCreateRequest request)
         {
-            _ramMetricsRepository.Create(new RamMetric
+            RamMetric ramMetric = new RamMetric
             {
-                Time = request.Time,
+                Time = request.Time.TotalSeconds,
                 Value = request.Value
-            });
+            };
+            _ramMetricsRepository.Create(ramMetric);
             if (_logger != null)
-                _logger.LogDebug(1, "NLog встроен в RamMetricsController");
+                _logger.LogDebug("Успешно добавили новую ram метрику: {0}", ramMetric);
             return Ok();
         }
         [HttpGet("all")]
@@ -42,21 +44,27 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<RamMetricDto>()
             };
             foreach (var metric in metrics)
-            {
-                response.Metrics.Add(new RamMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
-            }
+                response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
             return Ok(response);
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
-            return Ok(_ramMetricsRepository.GetByTimePeriod(fromTime, toTime));
+            var metrics = _ramMetricsRepository.GetByTimePeriod(fromTime, toTime);
+            var response = new AllRamMetricsResponse()
+            {
+                Metrics = new List<RamMetricDto>()
+            };
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new RamMetricDto
+                {
+                    Time = TimeSpan.FromSeconds(metric.Time),
+                    Value = metric.Value,
+                    Id = metric.Id
+                });
+            }
+            return Ok(response);
         }
     }
 }

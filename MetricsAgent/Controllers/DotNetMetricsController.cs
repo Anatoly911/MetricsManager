@@ -1,4 +1,6 @@
-﻿using MetricsAgent.Models;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,26 +15,26 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class DotNetMetricsController : ControllerBase
     {
-        private IDotNetMetricsRepository _dotNetMetricsRepository;
+        private readonly IDotNetMetricsRepository _dotNetMetricsRepository;
         private readonly ILogger<DotNetMetricsController> _logger;
-        public DotNetMetricsController(IDotNetMetricsRepository _dotNetMetricsRepository)
+        private readonly IMapper _mapper;
+        public DotNetMetricsController(IMapper mapper, ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository dotNetMetricsRepository)
         {
-            this._dotNetMetricsRepository = _dotNetMetricsRepository;
-        }
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger)
-        {
+            _mapper = mapper;
             _logger = logger;
+            _dotNetMetricsRepository = dotNetMetricsRepository;
         }
         [HttpPost("create")]
         public IActionResult Create([FromBody] DotNetMetricCreateRequest request)
         {
-            _dotNetMetricsRepository.Create(new DotNetMetric
+            DotNetMetric dotNetMetric = new DotNetMetric
             {
-                Time = request.Time,
+                Time = request.Time.TotalSeconds,
                 Value = request.Value
-            });
+            };
+            _dotNetMetricsRepository.Create(dotNetMetric);
             if (_logger != null)
-                _logger.LogDebug(1, "NLog встроен в DotNetMetricsController");
+                _logger.LogDebug("Успешно добавили новую dotNet метрику: {0}", dotNetMetric);
             return Ok();
         }
         [HttpGet("all")]
@@ -44,21 +46,28 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<DotNetMetricDto>()
             };
             foreach (var metric in metrics)
-            {
-                response.Metrics.Add(new DotNetMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
-            }
+                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
+
             return Ok(response);
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
-            return Ok(_dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime));
+            var metrics = _dotNetMetricsRepository.GetByTimePeriod(fromTime, toTime);
+            var response = new AllDotNetMetricsResponse()
+            {
+                Metrics = new List<DotNetMetricDto>()
+            };
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new DotNetMetricDto
+                {
+                    Time = TimeSpan.FromSeconds(metric.Time),
+                    Value = metric.Value,
+                    Id = metric.Id
+                });
+            }
+            return Ok(response);
         }
     }
 }

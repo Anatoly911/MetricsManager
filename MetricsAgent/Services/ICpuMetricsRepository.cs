@@ -1,9 +1,8 @@
 ﻿using MetricsAgent.Models;
 
-namespace MetricsAgent
+namespace MetricsAgent.Services
 {
     public interface ICpuMetricsRepository : IRepository<CpuMetric>
     {
-
     }
 }

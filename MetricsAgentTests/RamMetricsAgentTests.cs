@@ -16,7 +16,7 @@ namespace MetricsAgentTests
         public RamMetricsAgentTests()
         {
             mock = new Mock<IRamMetricsRepository>();
-            _ramMetricsController = new RamMetricsController(mock.Object);
+            _ramMetricsController = new RamMetricsController(null, null, mock.Object);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()

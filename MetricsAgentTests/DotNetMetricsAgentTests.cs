@@ -16,7 +16,7 @@ namespace MetricsAgentTests
         public DotNetMetricsAgentTests()
         {
             mock = new Mock<IDotNetMetricsRepository>();
-            _dotNetMetricsController = new DotNetMetricsController(mock.Object);
+            _dotNetMetricsController = new DotNetMetricsController(null, null, mock.Object);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()
