@@ -59,14 +59,15 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<HddMetricDto>()
             };
             foreach (var metric in metrics)
-                response.Metrics.Add(_mapper.Map<HddMetricDto>(metric));
-            return Ok(response);
-            /*response.Metrics.Add(new HddMetricDto
             {
-                Time = TimeSpan.FromSeconds(metric.Time),
-                Value = metric.Value,
-                Id = metric.Id
-            });*/
+                response.Metrics.Add(new HddMetricDto
+                {
+                    Time = TimeSpan.FromSeconds(metric.Time),
+                    Value = metric.Value,
+                    Id = metric.Id
+                });
+            }
+            return Ok(response);
         }
     }
 }
