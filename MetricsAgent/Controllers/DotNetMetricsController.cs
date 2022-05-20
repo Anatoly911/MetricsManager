@@ -24,19 +24,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _dotNetMetricsRepository = dotNetMetricsRepository;
         }
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] DotNetMetricCreateRequest request)
-        {
-            DotNetMetric dotNetMetric = new DotNetMetric
-            {
-                Time = request.Time.TotalSeconds,
-                Value = request.Value
-            };
-            _dotNetMetricsRepository.Create(dotNetMetric);
-            if (_logger != null)
-                _logger.LogDebug("Успешно добавили новую dotNet метрику: {0}", dotNetMetric);
-            return Ok();
-        }
         [HttpGet("all")]
         public IActionResult GetAll()
         {

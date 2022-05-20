@@ -29,7 +29,7 @@ namespace MetricsAgent.Services
         public void Delete(int id)
         {
             using var connection = new SQLiteConnection(_databaseOptions.Value.ConnectionString);
-            connection.Execute("DELETE FROM cpumetrics WHERE id=@id", new { id });
+            connection.Execute("DELETE FROM dotnetmetrics WHERE id=@id", new { id });
         }
         public void Update(DotNetMetric item)
         {

@@ -5,7 +5,7 @@ using System;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/network")]
+    [Route("api/network")]
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {

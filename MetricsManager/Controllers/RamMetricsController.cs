@@ -5,7 +5,7 @@ using System;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/ram")]
+    [Route("api/ram")]
     [ApiController]
     public class RamMetricsController : ControllerBase
     {

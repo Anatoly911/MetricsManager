@@ -1,5 +1,7 @@
 using AutoMapper;
+using FluentMigrator.Runner;
 using MetricsAgent.Converters;
+using MetricsAgent.Jobs;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,9 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using System;
-using System.Data.SQLite;
-
 
 namespace MetricsAgent
 {
@@ -23,35 +26,53 @@ namespace MetricsAgent
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new
-                MapperProfile()));
+            services.AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                .AddSQLite()
+                .WithGlobalConnectionString(Configuration.GetSection("Settings:DatabaseOptions:ConnectionString").Value)
+                .ScanIn(typeof(Startup).Assembly).For.Migrations())
+                .AddLogging(lb => lb
+                .AddFluentMigratorConsole());
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton<HddMetricJob>();
+            services.AddSingleton<NetworkMetricJob>();
+            services.AddSingleton<RamMetricJob>();
+            services.AddSingleton(new JobSchedule(typeof(CpuMetricJob), "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(typeof(DotNetMetricJob), "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(typeof(HddMetricJob), "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(typeof(NetworkMetricJob), "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(typeof(RamMetricJob), "0/5 * * * * ?"));
+            services.AddHostedService<QuartzHostedService>();
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
             services.AddControllers()
-    .AddJsonOptions(options =>
-        options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
-            ConfigureSqlLiteConnection(services);
-            services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>()
+                .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>()
                 .Configure<DatabaseOptions>(options =>
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
                 });
-            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>()
+            services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>()
                 .Configure<DatabaseOptions>(options =>
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
                 });
-            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>()
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>()
                 .Configure<DatabaseOptions>(options =>
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
                 });
-            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>()
+            services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>()
                 .Configure<DatabaseOptions>(options =>
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
                 });
-            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>()
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>()
                 .Configure<DatabaseOptions>(options =>
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
@@ -66,27 +87,7 @@ namespace MetricsAgent
                 });
             });
         }
-        private void ConfigureSqlLiteConnection(IServiceCollection services)
-        {
-            const string connectionString = "Data Source = metrics.db; Version = 3; Pooling = true; Max Pool Size = 100;";
-            var connection = new SQLiteConnection(connectionString);
-            connection.Open();
-            PrepareSchema(connection);
-        }
-        private void PrepareSchema(SQLiteConnection connection)
-        {
-            using (var command = new SQLiteCommand(connection))
-            {
-                command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-                command.ExecuteNonQuery();
-                command.CommandText =
-                    @"CREATE TABLE cpumetrics(id INTEGER
-                    PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
-            }
-        }
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +102,7 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
+            migrationRunner.MigrateUp();
         }
     }
 }
