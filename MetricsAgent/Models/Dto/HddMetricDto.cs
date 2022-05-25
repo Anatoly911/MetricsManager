@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MetricsAgent.Models
+namespace MetricsAgent.Models.Dto
 {
-    public class RamMetricDto
+    public class HddMetricDto
     {
         public TimeSpan Time { get; set; }
         public int Value { get; set; }

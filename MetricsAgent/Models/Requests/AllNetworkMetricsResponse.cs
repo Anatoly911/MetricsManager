@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MetricsAgent.Models.Dto;
+using System.Collections.Generic;
 
 namespace MetricsAgent.Models.Requests
 {

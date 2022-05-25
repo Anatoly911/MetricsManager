@@ -12,7 +12,6 @@ namespace MetricsAgent
 {
     public class Program
     {
-
         public static void Main(string[] args)
         {
             NLog.Logger logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -31,16 +30,16 @@ namespace MetricsAgent
                 NLog.LogManager.Shutdown();
             }
         }
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Trace);
-            }).UseNLog();
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+        })
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.SetMinimumLevel(LogLevel.Trace);
+        }).UseNLog(new NLogAspNetCoreOptions() { RemoveLoggerFactoryFilter = true });
     }
 }
 

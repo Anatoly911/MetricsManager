@@ -1,4 +1,6 @@
-﻿using MetricsAgent.Models;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,26 +15,26 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
-        private INetworkMetricsRepository _networkMetricsRepository;
+        private readonly INetworkMetricsRepository _networkMetricsRepository;
         private readonly ILogger<NetworkMetricsController> _logger;
-        public NetworkMetricsController(INetworkMetricsRepository _networkMetricsRepository)
+        private readonly IMapper _mapper;
+        public NetworkMetricsController(IMapper mapper, ILogger<NetworkMetricsController> logger, INetworkMetricsRepository networkMetricsRepository)
         {
-            this._networkMetricsRepository = _networkMetricsRepository;
-        }
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger)
-        {
+            _mapper = mapper;
             _logger = logger;
+            _networkMetricsRepository = networkMetricsRepository;
         }
         [HttpPost("create")]
         public IActionResult Create([FromBody] NetworkMetricCreateRequest request)
         {
-            _networkMetricsRepository.Create(new NetworkMetric
+            NetworkMetric networkMetric = new NetworkMetric
             {
-                Time = request.Time,
+                Time = request.Time.TotalSeconds,
                 Value = request.Value
-            });
+            };
+            _networkMetricsRepository.Create(networkMetric);
             if (_logger != null)
-                _logger.LogDebug(1, "NLog встроен в NetworkMetricsController");
+                _logger.LogDebug("Успешно добавили новую network метрику: {0}", networkMetric);
             return Ok();
         }
         [HttpGet("all")]
@@ -44,21 +46,27 @@ namespace MetricsAgent.Controllers
                 Metrics = new List<NetworkMetricDto>()
             };
             foreach (var metric in metrics)
-            {
-                response.Metrics.Add(new NetworkMetricDto
-                {
-                    Time = metric.Time,
-                    Value = metric.Value,
-                    Id = metric.Id
-                });
-            }
+                response.Metrics.Add(_mapper.Map<NetworkMetricDto>(metric));
             return Ok(response);
         }
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше первое сообщение в лог");
-            return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime, toTime));
+            var metrics = _networkMetricsRepository.GetByTimePeriod(fromTime, toTime);
+            var response = new AllNetworkMetricsResponse()
+            {
+                Metrics = new List<NetworkMetricDto>()
+            };
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new NetworkMetricDto
+                {
+                    Time = TimeSpan.FromSeconds(metric.Time),
+                    Value = metric.Value,
+                    Id = metric.Id
+                });
+            }
+            return Ok(response);
         }
     }
 }

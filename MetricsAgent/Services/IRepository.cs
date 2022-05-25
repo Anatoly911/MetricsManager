@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MetricsAgent
+namespace MetricsAgent.Services
 {
     public interface IRepository<T> where T : class
     {

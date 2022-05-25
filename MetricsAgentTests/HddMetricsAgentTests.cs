@@ -16,7 +16,7 @@ namespace MetricsAgentTests
         public HddMetricsAgentTests()
         {
             mock = new Mock<IHddMetricsRepository>();
-            _hddMetricsController = new HddMetricsController(mock.Object);
+            _hddMetricsController = new HddMetricsController(null, null, mock.Object);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()
