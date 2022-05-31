@@ -12,7 +12,7 @@ namespace MetricsManagerTests
         private CpuMetricsController _cpuMetricsController;
         public CpuMetricsManagerTests()
         {
-            _cpuMetricsController = new CpuMetricsController(null);
+            /*_cpuMetricsController = new CpuMetricsController(null);*/
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()

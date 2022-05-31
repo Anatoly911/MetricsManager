@@ -1,10 +1,12 @@
-﻿using MetricsManager.Controllers;
+﻿using MetricsManager.Models.Requests;
+using MetricsManager.Services.Impl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MetricsManager.Models
 {
-    public class AgentPool : IAgentPool<AgentInfo>
+    public class AgentPool
     {
         private Dictionary<int, AgentInfo> _values;
         public AgentPool()
@@ -19,6 +21,11 @@ namespace MetricsManager.Models
         public AgentInfo[] Get()
         {
             return _values.Values.ToArray();
+        }
+
+        public void Add(Uri agentAddress)
+        {
+            agentAddress = new Uri("https://localhost:44339/");
         }
         public Dictionary<int, AgentInfo> Values
         {

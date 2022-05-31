@@ -10,7 +10,7 @@ namespace MetricsManagerTests
         private RamMetricsController _ramMetricsController;
         public RamMetricsManagerTests()
         {
-            _ramMetricsController = new RamMetricsController(null);
+           /* _ramMetricsController = new RamMetricsController(null);*/
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()

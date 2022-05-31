@@ -40,11 +40,11 @@ namespace MetricsAgent
             services.AddSingleton<HddMetricJob>();
             services.AddSingleton<NetworkMetricJob>();
             services.AddSingleton<RamMetricJob>();
-            services.AddSingleton(new JobSchedule(typeof(CpuMetricJob), "0/5 * * * * ?"));
-            services.AddSingleton(new JobSchedule(typeof(DotNetMetricJob), "0/5 * * * * ?"));
-            services.AddSingleton(new JobSchedule(typeof(HddMetricJob), "0/5 * * * * ?"));
-            services.AddSingleton(new JobSchedule(typeof(NetworkMetricJob), "0/5 * * * * ?"));
-            services.AddSingleton(new JobSchedule(typeof(RamMetricJob), "0/5 * * * * ?"));
+            services.AddSingleton(new JobSchedule(typeof(CpuMetricJob), "0/5 * * ? * * *"));
+            services.AddSingleton(new JobSchedule(typeof(DotNetMetricJob), "0/5 * * ? * * *"));
+            services.AddSingleton(new JobSchedule(typeof(HddMetricJob), "0/5 * * ? * * *"));
+            services.AddSingleton(new JobSchedule(typeof(NetworkMetricJob), "0/5 * * ? * * *"));
+            services.AddSingleton(new JobSchedule(typeof(RamMetricJob), "0/5 * * ? * * *"));
             services.AddHostedService<QuartzHostedService>();
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
