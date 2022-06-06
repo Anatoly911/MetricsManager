@@ -22,19 +22,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _ramMetricsRepository = ramMetricsRepository;
         }
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] RamMetricCreateRequest request)
-        {
-            RamMetric ramMetric = new RamMetric
-            {
-                Time = request.Time.TotalSeconds,
-                Value = request.Value
-            };
-            _ramMetricsRepository.Create(ramMetric);
-            if (_logger != null)
-                _logger.LogDebug("Успешно добавили новую ram метрику: {0}", ramMetric);
-            return Ok();
-        }
         [HttpGet("all")]
         public IActionResult GetAll()
         {

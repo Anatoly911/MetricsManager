@@ -24,19 +24,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _networkMetricsRepository = networkMetricsRepository;
         }
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] NetworkMetricCreateRequest request)
-        {
-            NetworkMetric networkMetric = new NetworkMetric
-            {
-                Time = request.Time.TotalSeconds,
-                Value = request.Value
-            };
-            _networkMetricsRepository.Create(networkMetric);
-            if (_logger != null)
-                _logger.LogDebug("Успешно добавили новую network метрику: {0}", networkMetric);
-            return Ok();
-        }
         [HttpGet("all")]
         public IActionResult GetAll()
         {

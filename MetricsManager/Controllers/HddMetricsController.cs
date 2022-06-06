@@ -5,7 +5,7 @@ using System;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/hdd")]
+    [Route("api/hdd")]
     [ApiController]
     public class HddMetricsController : ControllerBase
     {

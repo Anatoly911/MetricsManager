@@ -5,7 +5,7 @@ using System;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/cpu")]
+    [Route("api/cpu")]
     [ApiController]
     public class CpuMetricsController : ControllerBase
     {

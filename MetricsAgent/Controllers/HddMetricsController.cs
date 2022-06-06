@@ -24,19 +24,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _hddMetricsRepository = hddMetricsRepository;
         }
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] HddMetricCreateRequest request)
-        {
-            HddMetric hddMetric = new HddMetric
-            {
-                Time = request.Time.TotalSeconds,
-                Value = request.Value
-            };
-            _hddMetricsRepository.Create(hddMetric);
-            if (_logger != null)
-                _logger.LogDebug("Успешно добавили новую hdd метрику: {0}", hddMetric);
-            return Ok();
-        }
         [HttpGet("all")]
         public IActionResult GetAll()
         {

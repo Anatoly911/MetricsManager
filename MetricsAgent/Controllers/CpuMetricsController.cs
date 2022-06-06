@@ -24,22 +24,6 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _cpuMetricsRepository = cpuMetricsRepository;
         }
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
-        {
-            CpuMetric cpuMetric = new CpuMetric
-            {
-                Time = request.Time.TotalSeconds,
-                Value = request.Value
-            };
-
-            _cpuMetricsRepository.Create(cpuMetric);
-
-            if (_logger != null)
-                _logger.LogDebug("Успешно добавили новую cpu метрику: {0}", cpuMetric);
-
-            return Ok();
-        }
         [HttpGet("all")]
         public IActionResult GetAll()
         {
