@@ -2,6 +2,8 @@
 using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
+using MetricsAgent.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,11 +18,24 @@ namespace MetricsAgent.Controllers
         private readonly IRamMetricsRepository _ramMetricsRepository;
         private readonly ILogger<RamMetricsController> _logger;
         private readonly IMapper _mapper;
-        public RamMetricsController(IMapper mapper, ILogger<RamMetricsController> logger, IRamMetricsRepository ramMetricsRepository)
+        private readonly IMetricsAgentClient _metricsAgentClient;
+        public RamMetricsController(IMapper mapper, ILogger<RamMetricsController> logger, IRamMetricsRepository ramMetricsRepository , IMetricsAgentClient metricsAgentClient)
         {
             _mapper = mapper;
             _logger = logger;
             _ramMetricsRepository = ramMetricsRepository;
+            _metricsAgentClient = metricsAgentClient;
+        }
+        [HttpGet("getRamMetrics")]
+        [ProducesResponseType(typeof(AllRamMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsV2([FromBody] RamMetricCreateRequest request)
+        {
+            AllRamMetricsResponse response = _metricsAgentClient.GetRamMetrics(new RamMetricCreateRequest()
+            {
+                Time = request.Time,
+                Value = request.Value,
+            });
+            return Ok(response);
         }
         [HttpGet("all")]
         public IActionResult GetAll()

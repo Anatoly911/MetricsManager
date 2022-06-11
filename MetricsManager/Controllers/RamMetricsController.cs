@@ -22,6 +22,18 @@ namespace MetricsManager.Controllers
             _agentPoll = agentPoll;
             _metricsAgentClient = metricsAgentClient;
         }
+        [HttpGet("getRamMetricsFromAgent")]
+        [ProducesResponseType(typeof(RamMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsFromAgentV2([FromBody] RamMetricsRequest request)
+        {
+            RamMetricsResponse response = _metricsAgentClient.GetRamMetrics(new RamMetricsRequest()
+            {
+                AgentId = request.AgentId,
+                FromTime = request.FromTime,
+                ToTime = request.ToTime
+            });
+            return Ok(response);
+        }
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {

@@ -15,6 +15,8 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace MetricsManager
 {
@@ -38,15 +40,15 @@ namespace MetricsManager
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<CpuMetricJob>();
-            /*services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton<DotNetMetricJob>();
             services.AddSingleton<HddMetricJob>();
             services.AddSingleton<NetworkMetricJob>();
-            services.AddSingleton<RamMetricJob>();*/
+            services.AddSingleton<RamMetricJob>();
             services.AddSingleton(new JobSchedule(typeof(CpuMetricJob), "0/5 * * ? * * *"));
-            /*services.AddSingleton(new JobSchedule(typeof(DotNetMetricJob), "0/5 * * ? * * *"));
+            services.AddSingleton(new JobSchedule(typeof(DotNetMetricJob), "0/5 * * ? * * *"));
             services.AddSingleton(new JobSchedule(typeof(HddMetricJob), "0/5 * * ? * * *"));
             services.AddSingleton(new JobSchedule(typeof(NetworkMetricJob), "0/5 * * ? * * *"));
-            services.AddSingleton(new JobSchedule(typeof(RamMetricJob), "0/5 * * ? * * *"));*/
+            services.AddSingleton(new JobSchedule(typeof(RamMetricJob), "0/5 * * ? * * *"));
             services.AddHostedService<QuartzHostedService>();
             services.AddSingleton<AgentPool>();
             services.AddControllers()
@@ -84,7 +86,28 @@ namespace MetricsManager
                 });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MetricsManager", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API сервиса агента сбора метрик",
+                    Description = "Здесь можно поиграть с api нашего сервиса",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Revutskyi A.",
+                        Email = string.Empty,
+                        Url = new Uri("https://www.facebook.com/profile.php?id=100001615134912"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Можно указать, под какой лицензией всё опубликовано",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+                c.EnableAnnotations();
                 c.MapType<TimeSpan>(() => new OpenApiSchema
                 {
                     Type = "string",

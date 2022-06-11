@@ -22,6 +22,18 @@ namespace MetricsManager.Controllers
             _agentPoll = agentPoll;
             _metricsAgentClient = metricsAgentClient;
         }
+        [HttpGet("getDotNetMetricsFromAgent")]
+        [ProducesResponseType(typeof(DotNetMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsFromAgentV2([FromBody] DotNetMetricsRequest request)
+        {
+            DotNetMetricsResponse response = _metricsAgentClient.GetDotNetMetrics(new DotNetMetricsRequest()
+            {
+                AgentId = request.AgentId,
+                FromTime = request.FromTime,
+                ToTime = request.ToTime
+            });
+            return Ok(response);
+        }
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {

@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManagerTests", "Metr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsAgentTests", "MetricsAgentTests\MetricsAgentTests.csproj", "{D99674DD-DF51-416D-8E50-1EF5BA4BE57E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetricsManager.Client", "MetricsManager.Client\MetricsManager.Client.csproj", "{90339634-E243-4E6B-AD91-D8778FAEA735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetricsAgent.Client", "MetricsAgent.Client\MetricsAgent.Client.csproj", "{7290059D-ECEF-40E8-9575-66658B6AEE84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{D99674DD-DF51-416D-8E50-1EF5BA4BE57E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99674DD-DF51-416D-8E50-1EF5BA4BE57E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99674DD-DF51-416D-8E50-1EF5BA4BE57E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90339634-E243-4E6B-AD91-D8778FAEA735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90339634-E243-4E6B-AD91-D8778FAEA735}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90339634-E243-4E6B-AD91-D8778FAEA735}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90339634-E243-4E6B-AD91-D8778FAEA735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7290059D-ECEF-40E8-9575-66658B6AEE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7290059D-ECEF-40E8-9575-66658B6AEE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7290059D-ECEF-40E8-9575-66658B6AEE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7290059D-ECEF-40E8-9575-66658B6AEE84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

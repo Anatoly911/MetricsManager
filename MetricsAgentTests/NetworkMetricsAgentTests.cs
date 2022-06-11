@@ -16,7 +16,7 @@ namespace MetricsAgentTests
         public NetworkMetricsAgentTests()
         {
             mock = new Mock<INetworkMetricsRepository>();
-            _networkMetricsController = new NetworkMetricsController(null, null, mock.Object);
+            _networkMetricsController = new NetworkMetricsController(null, null, mock.Object, null);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()

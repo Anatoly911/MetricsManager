@@ -2,6 +2,7 @@
 using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
+using MetricsAgent.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,11 +19,24 @@ namespace MetricsAgent.Controllers
         private readonly INetworkMetricsRepository _networkMetricsRepository;
         private readonly ILogger<NetworkMetricsController> _logger;
         private readonly IMapper _mapper;
-        public NetworkMetricsController(IMapper mapper, ILogger<NetworkMetricsController> logger, INetworkMetricsRepository networkMetricsRepository)
+        private readonly IMetricsAgentClient _metricsAgentClient;
+        public NetworkMetricsController(IMapper mapper, ILogger<NetworkMetricsController> logger, INetworkMetricsRepository networkMetricsRepository, IMetricsAgentClient metricsAgentClient)
         {
             _mapper = mapper;
             _logger = logger;
             _networkMetricsRepository = networkMetricsRepository;
+            _metricsAgentClient = metricsAgentClient;
+        }
+        [HttpGet("getNetworkMetrics")]
+        [ProducesResponseType(typeof(AllNetworkMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsV2([FromBody] NetworkMetricCreateRequest request)
+        {
+            AllNetworkMetricsResponse response = _metricsAgentClient.GetNetworkMetrics(new NetworkMetricCreateRequest()
+            {
+                Time = request.Time,
+                Value = request.Value,
+            });
+            return Ok(response);
         }
         [HttpGet("all")]
         public IActionResult GetAll()

@@ -23,9 +23,10 @@ namespace MetricsManager.Services.Impl
         {
             try
             {
-                AgentInfo agentInfo = _agentPool.Get().FirstOrDefault(agent => agent.AgentId == cpuMetricsRequest.AgentId);
-                if (agentInfo == null)
-                    throw new Exception($"AgentId #{cpuMetricsRequest.AgentId} is not found");
+                AgentInfo agentInfo = new AgentInfo();
+                agentInfo.AgentAddress = new Uri("https://localhost:5002/");
+                agentInfo.AgentId = 1;
+                agentInfo.Enable = true;
                 string requestQuery = $"{agentInfo.AgentAddress}api/metrics/cpu/from/{cpuMetricsRequest.FromTime.ToString("dd\\.hh\\:mm\\:ss")}/to/{cpuMetricsRequest.ToTime.ToString("dd\\.hh\\:mm\\:ss")}";
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestQuery);
                 httpRequestMessage.Headers.Add("Accept", "application/json");
@@ -48,9 +49,10 @@ namespace MetricsManager.Services.Impl
         {
             try
             {
-                AgentInfo agentInfo = _agentPool.Get().FirstOrDefault(agent => agent.AgentId == dotNetMetricsRequest.AgentId);
-                if (agentInfo == null)
-                    throw new Exception($"AgentId #{dotNetMetricsRequest.AgentId} is not found");
+                AgentInfo agentInfo = new AgentInfo();
+                agentInfo.AgentAddress = new Uri("https://localhost:5002/");
+                agentInfo.AgentId = 2;
+                agentInfo.Enable = true;
                 string requestQuery = $"{agentInfo.AgentAddress}api/metrics/dotnet/from/{dotNetMetricsRequest.FromTime.ToString("dd\\.hh\\:mm\\:ss")}/to/{dotNetMetricsRequest.ToTime.ToString("dd\\.hh\\:mm\\:ss")}";
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestQuery);
                 httpRequestMessage.Headers.Add("Accept", "application/json");
@@ -73,9 +75,10 @@ namespace MetricsManager.Services.Impl
         {
             try
             {
-                AgentInfo agentInfo = _agentPool.Get().FirstOrDefault(agent => agent.AgentId == hddMetricsRequest.AgentId);
-                if (agentInfo == null)
-                    throw new Exception($"AgentId #{hddMetricsRequest.AgentId} is not found");
+                AgentInfo agentInfo = new AgentInfo();
+                agentInfo.AgentAddress = new Uri("https://localhost:5002/");
+                agentInfo.AgentId = 3;
+                agentInfo.Enable = true;
                 string requestQuery = $"{agentInfo.AgentAddress}api/metrics/hdd/from/{hddMetricsRequest.FromTime.ToString("dd\\.hh\\:mm\\:ss")}/to/{hddMetricsRequest.ToTime.ToString("dd\\.hh\\:mm\\:ss")}";
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestQuery);
                 httpRequestMessage.Headers.Add("Accept", "application/json");
@@ -99,9 +102,10 @@ namespace MetricsManager.Services.Impl
         {
             try
             {
-                AgentInfo agentInfo = _agentPool.Get().FirstOrDefault(agent => agent.AgentId == networkMetricsRequest.AgentId);
-                if (agentInfo == null)
-                    throw new Exception($"AgentId #{networkMetricsRequest.AgentId} is not found");
+                AgentInfo agentInfo = new AgentInfo();
+                agentInfo.AgentAddress = new Uri("https://localhost:5002/");
+                agentInfo.AgentId = 4;
+                agentInfo.Enable = true;
                 string requestQuery = $"{agentInfo.AgentAddress}api/metrics/network/from/{networkMetricsRequest.FromTime.ToString("dd\\.hh\\:mm\\:ss")}/to/{networkMetricsRequest.ToTime.ToString("dd\\.hh\\:mm\\:ss")}";
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestQuery);
                 httpRequestMessage.Headers.Add("Accept", "application/json");
@@ -125,9 +129,10 @@ namespace MetricsManager.Services.Impl
         {
             try
             {
-                AgentInfo agentInfo = _agentPool.Get().FirstOrDefault(agent => agent.AgentId == ramMetricsRequest.AgentId);
-                if (agentInfo == null)
-                    throw new Exception($"AgentId #{ramMetricsRequest.AgentId} is not found");
+                AgentInfo agentInfo = new AgentInfo();
+                agentInfo.AgentAddress = new Uri("https://localhost:5002/");
+                agentInfo.AgentId = 5;
+                agentInfo.Enable = true;
                 string requestQuery = $"{agentInfo.AgentAddress}api/metrics/ram/from/{ramMetricsRequest.FromTime.ToString("dd\\.hh\\:mm\\:ss")}/to/{ramMetricsRequest.ToTime.ToString("dd\\.hh\\:mm\\:ss")}";
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestQuery);
                 httpRequestMessage.Headers.Add("Accept", "application/json");
