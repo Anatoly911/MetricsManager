@@ -1,8 +1,6 @@
 ﻿using MetricsAgent.Models;
-using MetricsAgent.Services;
 using Quartz;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,14 +17,13 @@ namespace MetricsAgent.Jobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            float hddUsageInPercents = _hddCounter.AvailableFreeSpace;
+            float hddUsageInPercents = _hddCounter.TotalFreeSpace;
             var time = TimeSpan.FromSeconds(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
             _hddMetricsRepository.Create(new HddMetric
             {
                 Time = time.TotalSeconds,
                 Value = (int)hddUsageInPercents
             });
-
             return Task.CompletedTask;
         }
     }

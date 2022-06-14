@@ -4,9 +4,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MetricsManager.Controllers
 {
-    /// <summary>
-    /// Работа с агентами
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [SwaggerTag("Предоставляет работу с агентами")]
@@ -17,11 +14,6 @@ namespace MetricsManager.Controllers
         {
             _agentPool = agentPool;
         }
-        /// <summary>
-        /// Регистрация нового агента
-        /// </summary>
-        /// <param name="agentInfo"></param>
-        /// <returns></returns>
         [HttpPost("register")]
         [SwaggerOperation(description: "Регистрация нового агента в системе мониторинга")]
         [SwaggerResponse(200, "Успешная операция")]
@@ -33,11 +25,6 @@ namespace MetricsManager.Controllers
             }
             return Ok();
         }
-        /// <summary>
-        /// Изменение статуса агнета
-        /// </summary>
-        /// <param name="agentId">Идентификатор агента</param>
-        /// <returns>Результат операции</returns>
         [HttpPut("enable/{agentId}")]
         [SwaggerOperation(description: "Изменить статус агента при необходимости")]
         [SwaggerResponse(200, "Успешная операция")]

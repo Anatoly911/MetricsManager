@@ -5,9 +5,9 @@ using System;
 
 namespace MetricsManager
 {
-    public class MapperProfile : Profile
+   /* public class MapperProfile : Profile
     {
-        /*public MapperProfile()
+        public MapperProfile()
         {
             CreateMap<CpuMetric, CpuMetricDto>().
                 ForMember(x => x.Time, opt => opt.MapFrom(src => TimeSpan.FromSeconds(src.Time)));
@@ -19,6 +19,6 @@ namespace MetricsManager
                 ForMember(x => x.Time, opt => opt.MapFrom(src => TimeSpan.FromSeconds(src.Time)));
             CreateMap<RamMetric, RamMetricDto>().
                 ForMember(x => x.Time, opt => opt.MapFrom(src => TimeSpan.FromSeconds(src.Time)));
-        }*/
-    }
+        }
+    }*/
 }
