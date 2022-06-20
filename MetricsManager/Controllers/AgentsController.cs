@@ -1,16 +1,15 @@
 ﻿using MetricsManager.Models;
-using MetricsManager.Services.Impl;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Data.SQLite;
-using System;
-using Dapper;
-using MetricsManager;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MetricsManager.Controllers
 {
+    /// <summary>
+    /// Работа с агентами
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [SwaggerTag("Предоставляет работу с агентами")]
     public class AgentsController : ControllerBase
     {
         private AgentPool _agentPool;
@@ -18,7 +17,14 @@ namespace MetricsManager.Controllers
         {
             _agentPool = agentPool;
         }
+        /// <summary>
+        /// Регистрация нового агента
+        /// </summary>
+        /// <param name="agentInfo"></param>
+        /// <returns></returns>
         [HttpPost("register")]
+        [SwaggerOperation(description: "Регистрация нового агента в системе мониторинга")]
+        [SwaggerResponse(200, "Успешная операция")]
         public IActionResult RegisterAgent([FromBody] AgentInfo agentInfo)
         {
             if (agentInfo != null)
@@ -27,7 +33,14 @@ namespace MetricsManager.Controllers
             }
             return Ok();
         }
+        /// <summary>
+        /// Изменение статуса агнета
+        /// </summary>
+        /// <param name="agentId">Идентификатор агента</param>
+        /// <returns>Результат операции</returns>
         [HttpPut("enable/{agentId}")]
+        [SwaggerOperation(description: "Изменить статус агента при необходимости")]
+        [SwaggerResponse(200, "Успешная операция")]
         public IActionResult EnableAgentById([FromRoute] int agentId)
         {
             if (_agentPool.Values.ContainsKey(agentId))

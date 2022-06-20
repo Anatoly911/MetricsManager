@@ -26,6 +26,7 @@ namespace MetricsAgent
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
                 .AddSQLite()

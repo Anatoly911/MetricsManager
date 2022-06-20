@@ -3,11 +3,11 @@ using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace MetricsAgent.Controllers
 {
@@ -24,6 +24,17 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _cpuMetricsRepository = cpuMetricsRepository;
         }
+       /* [HttpGet("getCpuMetrics")]
+        [ProducesResponseType(typeof(AllCpuMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsV2([FromBody] CpuMetricCreateRequest request)
+        {
+            AllCpuMetricsResponse response = _cpuMetricsRepository.GetByTimePeriod(fromTime, toTime);
+            {
+                Time = request.Time,
+                Value = request.Value,
+            });
+            return Ok(response);
+        }*/
         [HttpGet("all")]
         public IActionResult GetAll()
         {

@@ -18,7 +18,7 @@ namespace MetricsAgentTests
         public CpuMetricsAgentTests()
         {
             mock = new Mock<ICpuMetricsRepository>();
-            _cpuMetricsController = new CpuMetricsController(null, null, mock.Object);
+            _cpuMetricsController = new CpuMetricsController(null, null, mock.Object, null);
         }
         [Fact]
         public void Create_ShouldCall_Create_From_Repository()

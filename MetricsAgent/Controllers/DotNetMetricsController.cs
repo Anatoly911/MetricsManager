@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
+using MetricsAgent.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace MetricsAgent.Controllers
 {
@@ -18,11 +17,24 @@ namespace MetricsAgent.Controllers
         private readonly IDotNetMetricsRepository _dotNetMetricsRepository;
         private readonly ILogger<DotNetMetricsController> _logger;
         private readonly IMapper _mapper;
-        public DotNetMetricsController(IMapper mapper, ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository dotNetMetricsRepository)
+        private readonly IMetricsAgentClient _metricsAgentClient;
+        public DotNetMetricsController(IMapper mapper, ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository dotNetMetricsRepository, IMetricsAgentClient metricsAgentClient)
         {
             _mapper = mapper;
             _logger = logger;
             _dotNetMetricsRepository = dotNetMetricsRepository;
+            _metricsAgentClient = metricsAgentClient;
+        }
+        [HttpGet("getDotNetMetrics")]
+        [ProducesResponseType(typeof(AllDotNetMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsV2([FromBody] DotNetMetricCreateRequest request)
+        {
+            AllDotNetMetricsResponse response = _metricsAgentClient.GetDotNetMetrics(new DotNetMetricCreateRequest()
+            {
+                Time = request.Time,
+                Value = request.Value,
+            });
+            return Ok(response);
         }
         [HttpGet("all")]
         public IActionResult GetAll()

@@ -20,12 +20,8 @@ namespace MetricsManager.Models
         }
         public AgentInfo[] Get()
         {
-            return _values.Values.ToArray();
-        }
 
-        public void Add(Uri agentAddress)
-        {
-            agentAddress = new Uri("https://localhost:44339/");
+            return _values.Values.ToArray();
         }
         public Dictionary<int, AgentInfo> Values
         {

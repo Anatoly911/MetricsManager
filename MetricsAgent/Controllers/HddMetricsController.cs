@@ -2,6 +2,7 @@
 using MetricsAgent.Models;
 using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
+using MetricsAgent.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,11 +19,24 @@ namespace MetricsAgent.Controllers
         private readonly IHddMetricsRepository _hddMetricsRepository;
         private readonly ILogger<HddMetricsController> _logger;
         private readonly IMapper _mapper;
-        public HddMetricsController(IMapper mapper, ILogger<HddMetricsController> logger, IHddMetricsRepository hddMetricsRepository)
+        private readonly IMetricsAgentClient _metricsAgentClient;
+        public HddMetricsController(IMapper mapper, ILogger<HddMetricsController> logger, IHddMetricsRepository hddMetricsRepository, IMetricsAgentClient metricsAgentClient)
         {
             _mapper = mapper;
             _logger = logger;
             _hddMetricsRepository = hddMetricsRepository;
+            _metricsAgentClient = metricsAgentClient;
+        }
+        [HttpGet("getHddMetrics")]
+        [ProducesResponseType(typeof(AllHddMetricsResponse), StatusCodes.Status200OK)]
+        public IActionResult GetMetricsV2([FromBody] HddMetricCreateRequest request)
+        {
+            AllHddMetricsResponse response = _metricsAgentClient.GetHddMetrics(new HddMetricCreateRequest()
+            {
+                Time = request.Time,
+                Value = request.Value,
+            });
+            return Ok(response);
         }
         [HttpGet("all")]
         public IActionResult GetAll()
