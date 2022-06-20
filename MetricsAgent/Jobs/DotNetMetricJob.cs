@@ -14,7 +14,7 @@ namespace MetricsAgent.Jobs
         public DotNetMetricJob(IDotNetMetricsRepository dotnetMetricsRepository)
         {
             _dotnetMetricsRepository = dotnetMetricsRepository;
-            _dotnetCounter = new PerformanceCounter("Web Service(_Total)", "ISAPI Extension Requests/sec");
+            _dotnetCounter = new PerformanceCounter(".NET CLR Exceptions", "# of Exceps Thrown / sec", "_Global_");
         }
         public Task Execute(IJobExecutionContext context)
         {

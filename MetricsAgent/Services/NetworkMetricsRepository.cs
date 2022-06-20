@@ -19,7 +19,7 @@ namespace MetricsAgent.Services
         {
             DatabaseOptions databaseOptions = _databaseOptions.Value;
             using var connection = new SQLiteConnection(databaseOptions.ConnectionString);
-            connection.Execute("INSERT INTO neteworkmetrics(value, time) VALUES(@value, @time)",
+            connection.Execute("INSERT INTO networkmetrics(value, time) VALUES(@value, @time)",
             new
             {
                 value = item.Value,

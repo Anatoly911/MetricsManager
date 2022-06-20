@@ -17,7 +17,7 @@ namespace MetricsManager
             NLog.Logger logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                logger.Debug("Init MetricsManager");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception exception)
@@ -39,6 +39,6 @@ namespace MetricsManager
            {
                logging.ClearProviders();
                logging.SetMinimumLevel(LogLevel.Trace);
-           }).UseNLog();
+           }).UseNLog(new NLogAspNetCoreOptions() { RemoveLoggerFactoryFilter = true });
     }
 }

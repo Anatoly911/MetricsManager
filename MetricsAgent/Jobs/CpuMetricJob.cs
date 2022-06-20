@@ -9,13 +9,14 @@ namespace MetricsAgent.Jobs
 {
     public class CpuMetricJob : IJob
     {
-        private ICpuMetricsRepository _cpuMetricsRepository;
+        private readonly ICpuMetricsRepository _cpuMetricsRepository;
         private PerformanceCounter _cpuCounter;
         public CpuMetricJob(ICpuMetricsRepository cpuMetricsRepository)
         {
             _cpuMetricsRepository = cpuMetricsRepository;
             _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         }
+
         public Task Execute(IJobExecutionContext context)
         {
             float cpuUsageInPercents = _cpuCounter.NextValue();

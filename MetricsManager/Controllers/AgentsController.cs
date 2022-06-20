@@ -1,5 +1,11 @@
 ﻿using MetricsManager.Models;
+using MetricsManager.Services.Impl;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System.Data.SQLite;
+using System;
+using Dapper;
+using MetricsManager;
 
 namespace MetricsManager.Controllers
 {
@@ -7,8 +13,8 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class AgentsController : ControllerBase
     {
-        private IAgentPool<AgentInfo> _agentPool;
-        public AgentsController(IAgentPool<AgentInfo> agentPool)
+        private AgentPool _agentPool;
+        public AgentsController(AgentPool agentPool)
         {
             _agentPool = agentPool;
         }
@@ -24,7 +30,7 @@ namespace MetricsManager.Controllers
         [HttpPut("enable/{agentId}")]
         public IActionResult EnableAgentById([FromRoute] int agentId)
         {
-            if(_agentPool.Values.ContainsKey(agentId))
+            if (_agentPool.Values.ContainsKey(agentId))
                 _agentPool.Values[agentId].Enable = true;
             return Ok();
         }

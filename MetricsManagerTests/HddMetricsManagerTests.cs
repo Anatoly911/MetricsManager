@@ -10,7 +10,7 @@ namespace MetricsManagerTests
         private HddMetricsController _hddMetricsController;
         public HddMetricsManagerTests()
         {
-            _hddMetricsController = new HddMetricsController(null);
+            /*_hddMetricsController = new HddMetricsController(null);*/
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()

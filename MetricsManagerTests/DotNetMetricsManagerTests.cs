@@ -10,7 +10,7 @@ namespace MetricsManagerTests
         private DotNetMetricsController _dotNetMetricsController;
         public DotNetMetricsManagerTests()
         {
-            _dotNetMetricsController = new DotNetMetricsController(null);
+          /*  _dotNetMetricsController = new DotNetMetricsController(null);*/
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()

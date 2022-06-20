@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MetricsManager.Models;
+using MetricsManager.Models.Requests;
+using MetricsManager.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Linq;
+using System.Net.Http;
 
 namespace MetricsManager.Controllers
 {
@@ -9,17 +15,23 @@ namespace MetricsManager.Controllers
     [ApiController]
     public class HddMetricsController : ControllerBase
     {
-        private readonly ILogger<HddMetricsController> _logger;
-        public HddMetricsController(ILogger<HddMetricsController> logger)
+        private readonly AgentPool _agentPoll;
+        private readonly IMetricsAgentClient _metricsAgentClient;
+        public HddMetricsController(IMetricsAgentClient metricsAgentClient, AgentPool agentPoll)
         {
-            _logger = logger;
-            _logger.LogDebug(1, "NLog встроен в HddMetricsController");
+            _agentPoll = agentPoll;
+            _metricsAgentClient = metricsAgentClient;
         }
         [HttpGet("agent/{agentId}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int agentId, [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Привет! Это наше третье сообщение в лог");
-            return Ok();
+            HddMetricsResponse response = _metricsAgentClient.GetHddMetrics(new HddMetricsRequest()
+            {
+                AgentId = agentId,
+                FromTime = fromTime,
+                ToTime = toTime
+            });
+            return Ok(response);
         }
         [HttpGet("cluster/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAllCluster([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)

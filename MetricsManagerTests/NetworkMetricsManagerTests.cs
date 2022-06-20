@@ -10,7 +10,7 @@ namespace MetricsManagerTests
         private NetworkMetricsController _networkMetricsController;
         public NetworkMetricsManagerTests()
         {
-            _networkMetricsController = new NetworkMetricsController(null);
+            /*_networkMetricsController = new NetworkMetricsController(null);*/
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()
