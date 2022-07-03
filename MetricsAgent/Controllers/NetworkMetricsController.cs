@@ -19,15 +19,13 @@ namespace MetricsAgent.Controllers
         private readonly INetworkMetricsRepository _networkMetricsRepository;
         private readonly ILogger<NetworkMetricsController> _logger;
         private readonly IMapper _mapper;
-        private readonly IMetricsAgentClient _metricsAgentClient;
-        public NetworkMetricsController(IMapper mapper, ILogger<NetworkMetricsController> logger, INetworkMetricsRepository networkMetricsRepository, IMetricsAgentClient metricsAgentClient)
+        public NetworkMetricsController(IMapper mapper, ILogger<NetworkMetricsController> logger, INetworkMetricsRepository networkMetricsRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _networkMetricsRepository = networkMetricsRepository;
-            _metricsAgentClient = metricsAgentClient;
         }
-        [HttpGet("getNetworkMetrics")]
+        /*[HttpGet("getNetworkMetrics")]
         [ProducesResponseType(typeof(AllNetworkMetricsResponse), StatusCodes.Status200OK)]
         public IActionResult GetMetricsV2([FromBody] NetworkMetricCreateRequest request)
         {
@@ -37,7 +35,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value,
             });
             return Ok(response);
-        }
+        }*/
         [HttpGet("all")]
         public IActionResult GetAll()
         {

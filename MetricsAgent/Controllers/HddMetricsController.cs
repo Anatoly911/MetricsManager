@@ -19,17 +19,15 @@ namespace MetricsAgent.Controllers
         private readonly IHddMetricsRepository _hddMetricsRepository;
         private readonly ILogger<HddMetricsController> _logger;
         private readonly IMapper _mapper;
-        private readonly IMetricsAgentClient _metricsAgentClient;
-        public HddMetricsController(IMapper mapper, ILogger<HddMetricsController> logger, IHddMetricsRepository hddMetricsRepository, IMetricsAgentClient metricsAgentClient)
+        public HddMetricsController(IMapper mapper, ILogger<HddMetricsController> logger, IHddMetricsRepository hddMetricsRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _hddMetricsRepository = hddMetricsRepository;
-            _metricsAgentClient = metricsAgentClient;
         }
-        [HttpGet("getHddMetrics")]
-        [ProducesResponseType(typeof(AllHddMetricsResponse), StatusCodes.Status200OK)]
-        public IActionResult GetMetricsV2([FromBody] HddMetricCreateRequest request)
+        /*[HttpGet("getHddMetrics")]
+        [ProducesResponseType(typeof(AllHddMetricsResponse), StatusCodes.Status200OK)]*/
+       /* public IActionResult GetMetricsV2([FromBody] HddMetricCreateRequest request)
         {
             AllHddMetricsResponse response = _metricsAgentClient.GetHddMetrics(new HddMetricCreateRequest()
             {
@@ -37,7 +35,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value,
             });
             return Ok(response);
-        }
+        }*/
         [HttpGet("all")]
         public IActionResult GetAll()
         {

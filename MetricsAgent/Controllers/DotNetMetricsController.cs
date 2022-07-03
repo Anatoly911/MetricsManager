@@ -17,17 +17,15 @@ namespace MetricsAgent.Controllers
         private readonly IDotNetMetricsRepository _dotNetMetricsRepository;
         private readonly ILogger<DotNetMetricsController> _logger;
         private readonly IMapper _mapper;
-        private readonly IMetricsAgentClient _metricsAgentClient;
-        public DotNetMetricsController(IMapper mapper, ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository dotNetMetricsRepository, IMetricsAgentClient metricsAgentClient)
+        public DotNetMetricsController(IMapper mapper, ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository dotNetMetricsRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _dotNetMetricsRepository = dotNetMetricsRepository;
-            _metricsAgentClient = metricsAgentClient;
         }
-        [HttpGet("getDotNetMetrics")]
-        [ProducesResponseType(typeof(AllDotNetMetricsResponse), StatusCodes.Status200OK)]
-        public IActionResult GetMetricsV2([FromBody] DotNetMetricCreateRequest request)
+        /*[HttpGet("getDotNetMetrics")]
+        [ProducesResponseType(typeof(AllDotNetMetricsResponse), StatusCodes.Status200OK)]*/
+        /*public IActionResult GetMetricsV2([FromBody] DotNetMetricCreateRequest request)
         {
             AllDotNetMetricsResponse response = _metricsAgentClient.GetDotNetMetrics(new DotNetMetricCreateRequest()
             {
@@ -35,7 +33,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value,
             });
             return Ok(response);
-        }
+        }*/
         [HttpGet("all")]
         public IActionResult GetAll()
         {

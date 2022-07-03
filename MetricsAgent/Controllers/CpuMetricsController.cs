@@ -24,9 +24,9 @@ namespace MetricsAgent.Controllers
             _logger = logger;
             _cpuMetricsRepository = cpuMetricsRepository;
         }
-       /* [HttpGet("getCpuMetrics")]
+        /*[HttpGet("getCpuMetrics")]
         [ProducesResponseType(typeof(AllCpuMetricsResponse), StatusCodes.Status200OK)]
-        public IActionResult GetMetricsV2([FromBody] CpuMetricCreateRequest request)
+        *//*public IActionResult GetMetricsV2([FromBody] CpuMetricCreateRequest request)
         {
             AllCpuMetricsResponse response = _cpuMetricsRepository.GetByTimePeriod(fromTime, toTime);
             {

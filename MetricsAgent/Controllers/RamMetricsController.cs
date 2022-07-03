@@ -18,15 +18,13 @@ namespace MetricsAgent.Controllers
         private readonly IRamMetricsRepository _ramMetricsRepository;
         private readonly ILogger<RamMetricsController> _logger;
         private readonly IMapper _mapper;
-        private readonly IMetricsAgentClient _metricsAgentClient;
-        public RamMetricsController(IMapper mapper, ILogger<RamMetricsController> logger, IRamMetricsRepository ramMetricsRepository , IMetricsAgentClient metricsAgentClient)
+        public RamMetricsController(IMapper mapper, ILogger<RamMetricsController> logger, IRamMetricsRepository ramMetricsRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _ramMetricsRepository = ramMetricsRepository;
-            _metricsAgentClient = metricsAgentClient;
         }
-        [HttpGet("getRamMetrics")]
+        /*[HttpGet("getRamMetrics")]
         [ProducesResponseType(typeof(AllRamMetricsResponse), StatusCodes.Status200OK)]
         public IActionResult GetMetricsV2([FromBody] RamMetricCreateRequest request)
         {
@@ -36,7 +34,7 @@ namespace MetricsAgent.Controllers
                 Value = request.Value,
             });
             return Ok(response);
-        }
+        }*/
         [HttpGet("all")]
         public IActionResult GetAll()
         {

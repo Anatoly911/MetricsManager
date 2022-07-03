@@ -1,4 +1,7 @@
 using MetricsManager.Controllers;
+using MetricsManager.Models;
+using MetricsManager.Models.Requests;
+using MetricsManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,11 +11,15 @@ namespace MetricsManagerTests
 {
     public class CpuMetricsManagerTests
     {
+        private readonly AgentPool _agentPool;
         private readonly ILogger<CpuMetricsController> _logger;
         private CpuMetricsController _cpuMetricsController;
+        private readonly IMetricsAgentClient _metricsAgentClient;
         public CpuMetricsManagerTests()
         {
-            /*_cpuMetricsController = new CpuMetricsController(null);*/
+            
+             _agentPool = new AgentPool();
+            _cpuMetricsController = new CpuMetricsController(_metricsAgentClient, _agentPool);
         }
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()
